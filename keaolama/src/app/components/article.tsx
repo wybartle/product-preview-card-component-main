@@ -92,7 +92,7 @@ export default function Article() {
           const titleHeight = titleNode.clientHeight;
           console.log(titleHeight);
 
-          clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 10));
+          clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 15));
         }
 
     }, [articleSet, getLatestArticle, clampLines]);
