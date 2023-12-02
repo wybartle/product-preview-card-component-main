@@ -34,7 +34,7 @@
 */
 html,
 body {
-  height: 100%;
+  min-height: 100vh;
 }
 /*
   Typographic tweaks!
@@ -89,14 +89,15 @@ h3 {
 body {
   font-family: var(--ff-base);
   font-weight: var(--fw-regular);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--clr-neutral-med);
   background-color: var(--clr-secondary);
 
   /* for this project only */
-  display: grid;
-  place-content: center;
   margin: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* utilities */
@@ -124,6 +125,10 @@ body {
   width: 1px;
 }
 
+.line-clamp {
+  overflow: hidden;
+}
+
 /* button */
 .button {
   cursor: pointer;
@@ -140,13 +145,6 @@ body {
   font-size: 0.925rem;
 }
 
-.button[data-icon="cart"]::before {
-  content: "";
-  background-image: url("images/icon-cart.svg");
-  width: 15px;
-  height: 16px;
-}
-
 .button:is(:hover, :focus) {
   background-color: var(--clr-primary-variation);
 }
@@ -159,7 +157,7 @@ body {
 
   border: 0;
   border-radius: 0rem 0rem 0.5rem 0rem;
-  padding: 0.75em 1.5em;
+  padding: 0.20em 1.5em;
   font-weight: var(--fw-bold);
   font-size: 0.925rem;
 }
@@ -186,18 +184,20 @@ body {
   background-color: var(--clr-neutral-light);
   border-radius: 0.5rem;
   overflow: hidden;
-  max-width: 600px;
+  max-width: 650px;
+  max-height: 650px;
 }
 
 @media (min-width: 600px) {
   .article {
-    --content-padding: 2rem;
+    --content-padding: 1.80rem;
     grid-template-columns: 1fr;
   }
 }
 
 .top-right-corner-img {
   height: 80%;
+  width: auto;
   rotate: 200deg;
   /* transform: translateY(-90px); */
   transform: translateX(-12px);
@@ -205,7 +205,7 @@ body {
 }
 
 .article__date {
-  font-size: 0.8125rem;
+  font-size: 1rem;
   letter-spacing: 5px;
   text-transform: uppercase;
   font-weight: 800;
@@ -215,15 +215,25 @@ body {
 
 .article__content {
   display: grid;
-  gap: var(--content-spacing);
-  padding: var(--content-padding);
+  gap: calc(var(--content-spacing) * 0.50);
+  padding: calc(var(--content-padding) * .65) calc(var(--content-padding) * .75);
+  padding-top: calc(var(--content-padding) * .40);
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.article__content > p {
+  font-family: var(--ff-base);
+  font-size: 1.5rem;
 }
 
 .article__title {
-  font-size: 1.75rem;
-  line-height: 2rem;
+  font-size: 1.85rem;
+  line-height: 2.3rem;
   font-family: var(--ff-accent);
   color: var(--clr-neutral-dark);
+  /* text-wrap: balance; */
+  padding-right: 50px;
 }
 
 .article__price {
@@ -233,7 +243,7 @@ body {
 }
 
 .article__logo-section {
-  
+  gap: 0.35rem;
 }
 
 .article__bottom-logo {
