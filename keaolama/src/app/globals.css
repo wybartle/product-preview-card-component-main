@@ -1,0 +1,251 @@
+:root {
+  --clr-primary-main: hsl(13, 54.5%, 52.5%);
+  /* --clr-primary-400: rgb(200, 36%, 37%); */
+  --clr-primary-variation: hsl(13, 54.5%, 37%);
+  --clr-secondary: hsl(347, 63.6%, 8.6%);
+
+  --clr-neutral-dark: hsl(212, 21%, 14%);
+  --clr-neutral-med: hsl(228, 12%, 48%);
+  --clr-neutral-light: hsl(0, 0%, 100%);
+
+  --ff-accent: "Georgia", serif;
+  --ff-base: "Montserrat", sans-serif;
+
+  --fw-regular: 500;
+  --fw-bold: 700;
+}
+
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/*
+  2. Remove default margin
+*/
+* {
+  margin: 0;
+}
+/*
+  3. Allow percentage-based heights in the application
+*/
+html,
+body {
+  min-height: 100vh;
+}
+/*
+  Typographic tweaks!
+  4. Add accessible line-height
+  5. Improve text rendering
+*/
+body {
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+/*
+  6. Improve media defaults
+*/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+/*
+  7. Remove built-in form typography styles
+*/
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+/*
+  8. Avoid text overflows
+*/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1;
+}
+
+/* general styling */
+
+body {
+  font-family: var(--ff-base);
+  font-weight: var(--fw-regular);
+  font-size: 1rem;
+  color: var(--clr-neutral-med);
+  background-color: var(--clr-secondary);
+
+  /* for this project only */
+  margin: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* utilities */
+
+.flex-group-center {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.flex-group-spaced {
+  display: flex;
+  justify-content: space-between;
+  max-height: 50px;
+}
+
+.visually-hidden:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.line-clamp {
+  overflow: hidden;
+}
+
+/* button */
+.button {
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.75em 1.5em;
+  font-weight: var(--fw-bold);
+  font-size: 0.925rem;
+}
+
+.button:is(:hover, :focus) {
+  background-color: var(--clr-primary-variation);
+}
+
+.label {
+  text-decoration: none;
+  display: inline-flex;
+  gap: 0.75rem;
+  align-items: center;
+
+  border: 0;
+  border-radius: 0rem 0rem 0.5rem 0rem;
+  padding: 0.20em 1.5em;
+  font-weight: var(--fw-bold);
+  font-size: 0.925rem;
+}
+
+.stacked {
+  flex-direction: column;
+}
+
+.primary-color-filled {
+  background-color: var(--clr-primary-main);
+  color: var(--clr-neutral-light);
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+/* article styles */
+.article {
+  --content-padding: 1.5rem;
+  --content-spacing: 1rem;
+
+  display: grid;
+  background-color: var(--clr-neutral-light);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  max-width: 650px;
+  max-height: 650px;
+}
+
+@media (min-width: 600px) {
+  .article {
+    --content-padding: 1.80rem;
+    grid-template-columns: 1fr;
+  }
+}
+
+.top-right-corner-img {
+  height: 80%;
+  width: auto;
+  rotate: 200deg;
+  /* transform: translateY(-90px); */
+  transform: translateX(-12px);
+  margin: 5px
+}
+
+.article__date {
+  font-size: 1rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-weight: 800;
+  max-width: 50%;
+  padding: 0 10% 0 10%;
+}
+
+.article__content {
+  display: grid;
+  gap: calc(var(--content-spacing) * 0.50);
+  padding: calc(var(--content-padding) * .65) calc(var(--content-padding) * .75);
+  padding-top: calc(var(--content-padding) * .40);
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.article__content > p {
+  font-family: var(--ff-base);
+  font-size: 1.5rem;
+}
+
+.article__title {
+  font-size: 1.85rem;
+  line-height: 2.3rem;
+  font-family: var(--ff-accent);
+  color: var(--clr-neutral-dark);
+  /* text-wrap: balance; */
+  padding-right: 50px;
+}
+
+.article__price {
+  font-size: 2rem;
+  font-family: var(--ff-accent);
+  color: var(--clr-primary-main);
+}
+
+.article__logo-section {
+  gap: 0.35rem;
+}
+
+.article__bottom-logo {
+  max-height: 60px;
+}
