@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "cors-anywhere": "node cors-anywhere.js",
-    "ssl-proxy": "local-ssl-proxy --key ~/localhost-key.pem --cert ~/localhost.pem --source 9001 --target 54606"
+    "ssl-proxy": "local-ssl-proxy --key ~/localhost-key.pem --cert ~/localhost.pem --source 9001 --target 3000"
   },
   "dependencies": {
     "@preact/signals": "^1.2.2",
+    "capture-website": "^4.0.0",
     "cheerio": "^1.0.0-rc.12",
     "cors-anywhere": "^0.4.4",
     "local-ssl-proxy": "^2.0.5",

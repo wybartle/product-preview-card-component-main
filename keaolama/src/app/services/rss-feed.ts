@@ -1,6 +1,6 @@
 import Parser from 'rss-parser';
 import { useEffect } from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 const parser = new Parser({
 });
@@ -9,7 +9,7 @@ const kolamu = {
   url: 'https://keaolama.org/feed/',
 }
 
-let feedSubject:BehaviorSubject<any> = new BehaviorSubject<any>(null);
+let feedSubject:Subject<any> = new Subject<any>();
 
 // Note: some RSS feeds can't be loaded in the browser due to CORS security.
 // To get around this, you can use a proxy.
@@ -35,7 +35,7 @@ const RSSFeedService = {
     return feedSubject;
   },
   getLatestArticle: function() {
-    let latestArticleSubject = new BehaviorSubject<any>(null);
+    let latestArticleSubject = new Subject<any>();
     feedSubject.subscribe((feed) => {
       if (!!feed) {
         latestArticleSubject.next(feed.items[0]);

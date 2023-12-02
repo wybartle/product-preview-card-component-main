@@ -6,8 +6,9 @@ import shave from 'shave';
 import RSSFeedService from '../services/rss-feed';
 import { mahinaMap } from '../utility/dates';
 import * as cheerio from 'cheerio';
-import { intersection } from 'lodash';
+import { has, intersection } from 'lodash';
 import { title } from 'process';
+import { init } from 'next/dist/compiled/webpack/webpack';
 
 const baseClampHeight:number = 495;
 
@@ -39,12 +40,16 @@ function findBestTextMatch(anchorText:string, comparisonTexts:string[]) {
 
 export default function Article() {
 
+    let initHasHappened = false;
     const [articleDate, setArticleDate] = useState("");
     const [headline, setHeadline] = useState("Lorem Ipsum Dolor sit Amet, Consectetur Adipiscing Elit.");
     const [lead, setLead] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec lectus maximus mauris dapibus aliquam et ac orci. Sed faucibus egestas iaculis. Donec id dui eu nibh pellentesque aliquet. Ut sagittis, neque id mollis porta, turpis sem dapibus dolor, in feugiat sem turpis nec lectus. Mauris ultricies nunc in arcu rutrum dictum. Aenean et arcu vitae nulla efficitur ullamcorper. Mauris eu lectus erat. Nulla pellentesque augue nulla, at commodo eros viverra in. Duis sagittis viverra leo eu tincidunt.");
     const [articleSet, setArticleSet] = useState(false);
 
     function getLatestArticle() {
+
+      console.log("running getLatestArticle");
+
       RSSFeedService.getLatestArticle().subscribe((latestArticle) => {
         if (latestArticle && !articleSet) {
           
@@ -75,18 +80,20 @@ export default function Article() {
     }
 
     useEffect(() => {
+        console.log("running useEffect");
 
-        const titleNode = document.getElementsByClassName("article__title")[0];
-        const titleHeight = titleNode.clientHeight;
-        console.log(titleHeight);
-
-        clampLines(baseClampHeight - titleHeight);
-
-        if (!articleSet) {
+        if (!initHasHappened && !articleSet) {
           getLatestArticle();
+          initHasHappened = true;
+        } else {
+          const titleNode = document.getElementsByClassName("article__title")[0];
+          const titleHeight = titleNode.clientHeight;
+          console.log(titleHeight);
+
+          clampLines(baseClampHeight - titleHeight);
         }
 
-    }, [articleSet]);
+    }, [articleSet, getLatestArticle, clampLines]);
 
     return (
     <article className="article">
