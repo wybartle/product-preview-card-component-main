@@ -6,11 +6,12 @@ import shave from 'shave';
 import RSSFeedService from '../services/rss-feed';
 import { mahinaMap } from '../utility/dates';
 import * as cheerio from 'cheerio';
-import { has, intersection } from 'lodash';
-import { title } from 'process';
-import { init } from 'next/dist/compiled/webpack/webpack';
+import { intersection } from 'lodash';
 
-const baseClampHeight:number = 495;
+const baseArticleContentHeight:number = 600;
+const footerHeight:number = 86.5;
+const gapHeight:number = 8;
+const paddingHeight:number = 10.4;
 
 function clampLines(maxHeight:number) {
   shave('p', maxHeight, {classname: 'line-clamp'});
@@ -45,6 +46,7 @@ export default function Article() {
     const [headline, setHeadline] = useState("Lorem Ipsum Dolor sit Amet, Consectetur Adipiscing Elit.");
     const [lead, setLead] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec lectus maximus mauris dapibus aliquam et ac orci. Sed faucibus egestas iaculis. Donec id dui eu nibh pellentesque aliquet. Ut sagittis, neque id mollis porta, turpis sem dapibus dolor, in feugiat sem turpis nec lectus. Mauris ultricies nunc in arcu rutrum dictum. Aenean et arcu vitae nulla efficitur ullamcorper. Mauris eu lectus erat. Nulla pellentesque augue nulla, at commodo eros viverra in. Duis sagittis viverra leo eu tincidunt.");
     const [articleSet, setArticleSet] = useState(false);
+    let screenshotGenerated:boolean = false;
 
     function getLatestArticle() {
 
@@ -90,7 +92,7 @@ export default function Article() {
           const titleHeight = titleNode.clientHeight;
           console.log(titleHeight);
 
-          clampLines(baseClampHeight - titleHeight);
+          clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight));
         }
 
     }, [articleSet, getLatestArticle, clampLines]);

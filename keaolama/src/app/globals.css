@@ -216,10 +216,11 @@ body {
 .article__content {
   display: grid;
   gap: calc(var(--content-spacing) * 0.50);
-  padding: calc(var(--content-padding) * .65) calc(var(--content-padding) * .75);
+  padding: calc(var(--content-padding) * .25) calc(var(--content-padding) * .65);
   padding-top: calc(var(--content-padding) * .40);
   font-weight: 500;
   font-size: 1.25rem;
+  max-height: 600px;
 }
 
 .article__content > p {
