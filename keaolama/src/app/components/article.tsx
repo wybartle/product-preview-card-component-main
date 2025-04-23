@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import shave from 'shave';
-import RSSFeedService from '../services/rss-feed';
 import { mahinaMap } from '../utility/dates';
 import * as cheerio from 'cheerio';
 import { intersection } from 'lodash';
+import { getArticleData } from '../services/firebase-client';
 
 const baseArticleContentHeight:number = 600;
 const footerHeight:number = 86.5;
@@ -48,11 +48,12 @@ export default function Article() {
     const [articleSet, setArticleSet] = useState(false);
     let screenshotGenerated:boolean = false;
 
-    function getLatestArticle() {
-
+    async function getLatestArticle() {
       console.log("running getLatestArticle");
 
-      RSSFeedService.getLatestArticle().subscribe((latestArticle) => {
+      const latestArticle:any = await getArticleData();
+        console.log(latestArticle);
+
         if (latestArticle && !articleSet) {
           
           console.log(latestArticle);
@@ -73,12 +74,10 @@ export default function Article() {
           setHeadline(firstParagraph);
     
           const leadContent:string = findBestTextMatch(firstParagraph, paragraphs.slice(1));
-          setLead(leadContent);
+          setLead(paragraphs[2]);
     
           setArticleSet(true);
         }
-    
-      });
     }
 
     useEffect(() => {
@@ -90,7 +89,7 @@ export default function Article() {
         } else {
           const titleNode = document.getElementsByClassName("article__title")[0];
           const titleHeight = titleNode.clientHeight;
-          console.log(titleHeight);
+          console.log("titleHeight: " + titleHeight + "px");
 
           clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 15));
         }

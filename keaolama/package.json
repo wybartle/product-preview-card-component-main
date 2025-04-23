@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "cors-anywhere": "node cors-anywhere.js",
-    "ssl-proxy": "local-ssl-proxy --key ~/localhost-key.pem --cert ~/localhost.pem --source 9001 --target 3000"
+    "ssl-proxy": "local-ssl-proxy --key ~/localhost-key.pem --cert ~/localhost.pem --source 9000 --target 3000"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
+    "firebase": "^11.6.0",
     "lodash": "^4.17.21",
     "next": "^14.0.3",
     "react": "^18",
