@@ -185,6 +185,7 @@ body {
   border-radius: 0.5rem;
   overflow: hidden;
   max-width: 650px;
+  min-height: 580px;
   max-height: 650px;
 }
 
@@ -220,6 +221,7 @@ body {
   padding-top: calc(var(--content-padding) * .40);
   font-weight: 500;
   font-size: 1.25rem;
+  min-height: 540px;
   max-height: 600px;
 }
 
