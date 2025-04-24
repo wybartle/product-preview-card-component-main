@@ -74,7 +74,7 @@ export default function Article() {
           setHeadline(firstParagraph);
     
           const leadContent:string = findBestTextMatch(firstParagraph, paragraphs.slice(1));
-          setLead(paragraphs[2]);
+          setLead(leadContent);
     
           setArticleSet(true);
         }
@@ -91,7 +91,7 @@ export default function Article() {
           const titleHeight = titleNode.clientHeight;
           console.log("titleHeight: " + titleHeight + "px");
 
-          clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 15));
+          clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 55));
         }
 
     }, [articleSet, getLatestArticle, clampLines]);

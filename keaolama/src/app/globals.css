@@ -218,7 +218,7 @@ body {
   display: grid;
   gap: calc(var(--content-spacing) * 0.50);
   padding: calc(var(--content-padding) * .25) calc(var(--content-padding) * .65);
-  padding-top: calc(var(--content-padding) * .40);
+  padding-top: calc(var(--content-padding) * .50);
   font-weight: 500;
   font-size: 1.25rem;
   min-height: 540px;
@@ -251,4 +251,31 @@ body {
 
 .article__bottom-logo {
   max-height: 60px;
+}
+
+@media (max-width: 660px) {
+  .article__date {
+    max-width: 100%;
+  }
+}
+
+
+@media (max-width: 500px) {
+
+  .article {
+    max-height: 850px;
+  }
+
+  .article__content {
+    padding-top: 15px;
+  }
+
+  .article__content > p {
+    font-size: 1.2rem;
+  }
+
+  .article__logo-section {
+    padding-top: 15px;
+  }
+
 }
