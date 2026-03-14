@@ -180,6 +180,7 @@ body {
   --content-padding: 1.5rem;
   --content-spacing: 1rem;
 
+  position: relative;
   display: grid;
   background-color: var(--clr-neutral-light);
   border-radius: 0.5rem;
@@ -190,9 +191,9 @@ body {
 }
 
 .article__edit-toggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
   height: 22px;
   width: 72px;
   display: inline-flex;
