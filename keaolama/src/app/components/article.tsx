@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import shave from 'shave';
 import { mahinaMap } from '../utility/dates';
 import * as cheerio from 'cheerio';
@@ -14,7 +14,7 @@ const gapHeight:number = 8;
 const paddingHeight:number = 10.4;
 
 function clampLines(maxHeight:number) {
-  shave('p', maxHeight, {classname: 'line-clamp'});
+  shave('.article__lead', maxHeight, {classname: 'line-clamp'});
 }
 
 function findBestTextMatch(anchorText:string, comparisonTexts:string[]) {
@@ -41,14 +41,13 @@ function findBestTextMatch(anchorText:string, comparisonTexts:string[]) {
 
 export default function Article() {
 
-    let initHasHappened = false;
     const [articleDate, setArticleDate] = useState("");
     const [headline, setHeadline] = useState("Lorem Ipsum Dolor sit Amet, Consectetur Adipiscing Elit.");
     const [lead, setLead] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec lectus maximus mauris dapibus aliquam et ac orci. Sed faucibus egestas iaculis. Donec id dui eu nibh pellentesque aliquet. Ut sagittis, neque id mollis porta, turpis sem dapibus dolor, in feugiat sem turpis nec lectus. Mauris ultricies nunc in arcu rutrum dictum. Aenean et arcu vitae nulla efficitur ullamcorper. Mauris eu lectus erat. Nulla pellentesque augue nulla, at commodo eros viverra in. Duis sagittis viverra leo eu tincidunt.");
     const [articleSet, setArticleSet] = useState(false);
-    let screenshotGenerated:boolean = false;
+    const [isEditMode, setIsEditMode] = useState(false);
 
-    async function getLatestArticle() {
+    const getLatestArticle = useCallback(async () => {
       console.log("running getLatestArticle");
 
       const latestArticle:any = await getArticleData();
@@ -78,27 +77,57 @@ export default function Article() {
     
           setArticleSet(true);
         }
-    }
+    }, [articleSet]);
+
+    const toggleEditMode = useCallback(() => {
+      setIsEditMode((previousMode) => !previousMode);
+    }, []);
 
     useEffect(() => {
-        console.log("running useEffect");
+      if (!articleSet) {
+        getLatestArticle();
+      }
+    }, [articleSet, getLatestArticle]);
 
-        if (!initHasHappened && !articleSet) {
-          getLatestArticle();
-          initHasHappened = true;
-        } else {
-          const titleNode = document.getElementsByClassName("article__title")[0];
-          const titleHeight = titleNode.clientHeight;
-          console.log("titleHeight: " + titleHeight + "px");
+    useEffect(() => {
+      if (!articleSet || isEditMode) {
+        return;
+      }
 
-          clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 55));
-        }
+      const titleNode = document.getElementsByClassName("article__title")[0] as HTMLElement | undefined;
+      if (!titleNode) {
+        return;
+      }
 
-    }, [articleSet, getLatestArticle, clampLines]);
+      const titleHeight = titleNode.clientHeight;
+      console.log("titleHeight: " + titleHeight + "px");
+
+      clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 55));
+    }, [articleSet, headline, lead, isEditMode]);
 
     return (
-    <article className="article">
+    <>
+      <button
+        type="button"
+        className="article__edit-toggle"
+        onClick={toggleEditMode}
+        aria-label={isEditMode ? "Confirm card edits" : "Edit card text"}
+      >
+        <span className="article__edit-icon" aria-hidden="true">
+          {isEditMode ? (
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="M9.2 16.6 4.8 12.2l1.6-1.6 2.8 2.8 8.4-8.4 1.6 1.6z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+              <path d="m4 17.3 8.9-8.9 2.7 2.7-8.9 8.9H4zm14.7-9.6-1.4 1.4-2.7-2.7L16 5c.4-.4 1-.4 1.4 0l1.3 1.3c.4.4.4 1 0 1.4z" />
+            </svg>
+          )}
+        </span>
+        <span>{isEditMode ? "Confirm" : "Edit"}</span>
+      </button>
 
+    <article className="article">
       <div className="flex-group-spaced">
 
       <p className="article__date label justify-center primary-color-filled">{articleDate}</p>
@@ -115,13 +144,33 @@ export default function Article() {
 
       <div className="article__content">
 
-        <h1 className="article__title">
-          {headline}
-        </h1>
+        {isEditMode ? (
+          <textarea
+            className="article__title article__editable-field article__title-editable"
+            value={headline}
+            onChange={(event) => setHeadline(event.target.value)}
+            aria-label="Edit article title"
+            rows={3}
+          />
+        ) : (
+          <h1 className="article__title">
+            {headline}
+          </h1>
+        )}
 
-        <p className="line-clamp">
-          {lead}
-        </p>
+        {isEditMode ? (
+          <textarea
+            className="article__lead article__editable-field article__lead-editable"
+            value={lead}
+            onChange={(event) => setLead(event.target.value)}
+            aria-label="Edit article body"
+            rows={10}
+          />
+        ) : (
+          <p className="article__lead line-clamp">
+            {lead}
+          </p>
+        )}
 
         <div className="article__logo-section label stacked">
           <Image
@@ -138,5 +187,6 @@ export default function Article() {
       </div>
 
     </article>
+    </>
     )
 }

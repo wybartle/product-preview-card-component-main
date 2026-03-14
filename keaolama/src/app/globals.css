@@ -92,6 +92,8 @@ body {
   font-size: 1rem;
   color: var(--clr-neutral-med);
   background-color: var(--clr-secondary);
+  position: relative;
+  min-height: max(1200px, 100vh);
 
   /* for this project only */
   margin: 2rem;
@@ -184,9 +186,53 @@ body {
   background-color: var(--clr-neutral-light);
   border-radius: 0.5rem;
   overflow: hidden;
+  width: min(650px, calc(100vw - 4rem));
+  min-width: min(650px, calc(100vw - 4rem));
   max-width: 650px;
   min-height: 580px;
   max-height: 650px;
+}
+
+.article__edit-toggle {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  height: 22px;
+  width: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  border-radius: 0.45rem;
+  border: 1px solid hsla(272, 92%, 81%, 0.4);
+  background-color: hsla(347, 60%, 19%, 0.68);
+  color: hsla(272, 96%, 90%, 1);
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+  z-index: 10;
+}
+
+.article__edit-toggle:is(:hover, :focus-visible) {
+  background-color: hsla(347, 58%, 26%, 0.75);
+  border-color: hsla(272, 92%, 86%, 0.85);
+  box-shadow: 0 0 0 2px hsla(272, 92%, 81%, 0.28);
+  outline: none;
+}
+
+.article__edit-icon {
+  display: inline-flex;
+  width: 10px;
+  height: 10px;
+}
+
+.article__edit-icon svg {
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
 }
 
 @media (min-width: 600px) {
@@ -225,7 +271,7 @@ body {
   max-height: 600px;
 }
 
-.article__content > p {
+.article__lead {
   font-family: var(--ff-base);
   font-size: 1.5rem;
 }
@@ -237,6 +283,38 @@ body {
   color: var(--clr-neutral-dark);
   /* text-wrap: balance; */
   padding-right: 50px;
+}
+
+.article__editable-field {
+  display: block;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  border: 1.5px solid hsla(272, 95%, 82%, 0.95);
+  background-color: hsla(274, 92%, 98%, 0.9);
+  color: var(--clr-neutral-dark);
+  box-shadow: 0 0 0 2px hsla(272, 95%, 82%, 0.22);
+  padding: 0.35rem 0.5rem;
+  resize: vertical;
+}
+
+.article__editable-field:focus {
+  outline: none;
+  border-color: hsla(272, 98%, 75%, 1);
+  box-shadow: 0 0 0 2px hsla(272, 98%, 75%, 0.32);
+}
+
+.article__title-editable {
+  min-height: 125px;
+  font-size: 1.85rem;
+  line-height: 2.3rem;
+  font-family: var(--ff-accent);
+}
+
+.article__lead-editable {
+  min-height: 220px;
+  line-height: 1.6;
 }
 
 .article__price {
@@ -270,7 +348,7 @@ body {
     padding-top: 15px;
   }
 
-  .article__content > p {
+  .article__lead {
     font-size: 1.2rem;
   }
 
