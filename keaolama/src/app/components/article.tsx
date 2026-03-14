@@ -103,7 +103,7 @@ export default function Article() {
       console.log("titleHeight: " + titleHeight + "px");
 
       clampLines((baseArticleContentHeight - titleHeight - footerHeight - (gapHeight*2) - paddingHeight - 55));
-    }, [articleSet, headline, lead, isEditMode, clampLines]);
+    }, [articleSet, headline, lead, isEditMode]);
 
     return (
     <article className="article">
