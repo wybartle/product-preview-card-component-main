@@ -106,7 +106,7 @@ export default function Article() {
     }, [articleSet, headline, lead, isEditMode]);
 
     return (
-    <article className="article">
+    <>
       <button
         type="button"
         className="article__edit-toggle"
@@ -127,6 +127,7 @@ export default function Article() {
         <span>{isEditMode ? "Confirm" : "Edit"}</span>
       </button>
 
+    <article className="article">
       <div className="flex-group-spaced">
 
       <p className="article__date label justify-center primary-color-filled">{articleDate}</p>
@@ -186,5 +187,6 @@ export default function Article() {
       </div>
 
     </article>
+    </>
     )
 }
