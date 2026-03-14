@@ -17,15 +17,18 @@ function clampLines(maxHeight:number) {
   shave('.article__lead', maxHeight, {classname: 'line-clamp'});
 }
 
-function findBestTextMatch(anchorText:string, comparisonTexts:string[]) {
+function findBestTextMatchIndex(anchorText:string, comparisonTexts:string[]) {
+  if (comparisonTexts.length === 0) {
+    return -1;
+  }
+
   const comparisonTextsWords:Array<string[]> = comparisonTexts.map((comparisonText) => {
     return comparisonText.split(" ");
   });
-  console.log(comparisonTextsWords);
 
   const anchorTextWords = anchorText.split(" ");
   let bestMatchIndex:number = 0;
-  let bestMatchScore:number = 0;
+  let bestMatchScore:number = -1;
   for (let i = 0; i < comparisonTextsWords.length; i++) {
     const textMatchScore = intersection(anchorTextWords, comparisonTextsWords[i]).length;
     if (textMatchScore > bestMatchScore) {
@@ -33,8 +36,8 @@ function findBestTextMatch(anchorText:string, comparisonTexts:string[]) {
       bestMatchIndex = i;
     }
   }
-  const bestTextMatch:string = comparisonTexts[bestMatchIndex];
-  return bestTextMatch
+
+  return bestMatchIndex;
 }
 
 
@@ -46,6 +49,8 @@ export default function Article() {
     const [lead, setLead] = useState("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec lectus maximus mauris dapibus aliquam et ac orci. Sed faucibus egestas iaculis. Donec id dui eu nibh pellentesque aliquet. Ut sagittis, neque id mollis porta, turpis sem dapibus dolor, in feugiat sem turpis nec lectus. Mauris ultricies nunc in arcu rutrum dictum. Aenean et arcu vitae nulla efficitur ullamcorper. Mauris eu lectus erat. Nulla pellentesque augue nulla, at commodo eros viverra in. Duis sagittis viverra leo eu tincidunt.");
     const [articleSet, setArticleSet] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [bodyParagraphs, setBodyParagraphs] = useState<string[]>([]);
+    const [leadParagraphIndex, setLeadParagraphIndex] = useState<number | null>(null);
 
     const getLatestArticle = useCallback(async () => {
       console.log("running getLatestArticle");
@@ -71,9 +76,15 @@ export default function Article() {
          
           const firstParagraph:string = paragraphs[0];
           setHeadline(firstParagraph);
-    
-          const leadContent:string = findBestTextMatch(firstParagraph, paragraphs.slice(1));
+
+          const remainingParagraphs:string[] = paragraphs.slice(1);
+          setBodyParagraphs(remainingParagraphs);
+
+          const bestLeadParagraphIndex:number = findBestTextMatchIndex(firstParagraph, remainingParagraphs);
+          const resolvedLeadParagraphIndex:number = bestLeadParagraphIndex >= 0 ? bestLeadParagraphIndex : 0;
+          const leadContent:string = remainingParagraphs[resolvedLeadParagraphIndex] ?? "";
           setLead(leadContent);
+          setLeadParagraphIndex(remainingParagraphs.length > 0 ? resolvedLeadParagraphIndex : null);
     
           setArticleSet(true);
         }
@@ -82,6 +93,52 @@ export default function Article() {
     const toggleEditMode = useCallback(() => {
       setIsEditMode((previousMode) => !previousMode);
     }, []);
+
+    const resolveLeadParagraphIndex = useCallback((): number | null => {
+      if (bodyParagraphs.length === 0) {
+        return null;
+      }
+
+      if (
+        leadParagraphIndex !== null &&
+        leadParagraphIndex >= 0 &&
+        leadParagraphIndex < bodyParagraphs.length &&
+        bodyParagraphs[leadParagraphIndex] === lead
+      ) {
+        return leadParagraphIndex;
+      }
+
+      const exactMatchIndex = bodyParagraphs.indexOf(lead);
+      if (exactMatchIndex >= 0) {
+        return exactMatchIndex;
+      }
+
+      const closestMatchIndex = findBestTextMatchIndex(lead, bodyParagraphs);
+      if (closestMatchIndex >= 0) {
+        return closestMatchIndex;
+      }
+
+      return 0;
+    }, [bodyParagraphs, lead, leadParagraphIndex]);
+
+    const swapLeadWithAdjacentParagraph = useCallback((direction:"up" | "down") => {
+      const currentIndex = resolveLeadParagraphIndex();
+      if (currentIndex === null) {
+        return;
+      }
+
+      const targetIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+      if (targetIndex < 0 || targetIndex >= bodyParagraphs.length) {
+        return;
+      }
+
+      setLead(bodyParagraphs[targetIndex]);
+      setLeadParagraphIndex(targetIndex);
+    }, [bodyParagraphs, resolveLeadParagraphIndex]);
+
+    const resolvedLeadParagraphIndex = resolveLeadParagraphIndex();
+    const canSwapWithPreviousParagraph = resolvedLeadParagraphIndex !== null && resolvedLeadParagraphIndex > 0;
+    const canSwapWithNextParagraph = resolvedLeadParagraphIndex !== null && resolvedLeadParagraphIndex < bodyParagraphs.length - 1;
 
     useEffect(() => {
       if (!articleSet) {
@@ -162,7 +219,10 @@ export default function Article() {
           <textarea
             className="article__lead article__editable-field article__lead-editable"
             value={lead}
-            onChange={(event) => setLead(event.target.value)}
+            onChange={(event) => {
+              setLead(event.target.value);
+              setLeadParagraphIndex(null);
+            }}
             aria-label="Edit article body"
             rows={10}
           />
@@ -187,6 +247,29 @@ export default function Article() {
       </div>
 
     </article>
+
+    {isEditMode && (
+      <div className="article__paragraph-controls" role="group" aria-label="Swap body text with adjacent paragraphs">
+        <button
+          type="button"
+          className="article__paragraph-control-button"
+          aria-label="Swap body text with previous paragraph"
+          onClick={() => swapLeadWithAdjacentParagraph("up")}
+          disabled={!canSwapWithPreviousParagraph}
+        >
+          <span aria-hidden="true">↑</span>
+        </button>
+        <button
+          type="button"
+          className="article__paragraph-control-button"
+          aria-label="Swap body text with next paragraph"
+          onClick={() => swapLeadWithAdjacentParagraph("down")}
+          disabled={!canSwapWithNextParagraph}
+        >
+          <span aria-hidden="true">↓</span>
+        </button>
+      </div>
+    )}
     </>
     )
 }
