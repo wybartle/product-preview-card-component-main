@@ -92,6 +92,7 @@ body {
   font-size: 1rem;
   color: var(--clr-neutral-med);
   background-color: var(--clr-secondary);
+  position: relative;
 
   /* for this project only */
   margin: 2rem;
@@ -180,11 +181,11 @@ body {
   --content-padding: 1.5rem;
   --content-spacing: 1rem;
 
-  position: relative;
   display: grid;
   background-color: var(--clr-neutral-light);
   border-radius: 0.5rem;
   overflow: hidden;
+  width: min(650px, 100%);
   max-width: 650px;
   min-height: 580px;
   max-height: 650px;
@@ -192,8 +193,8 @@ body {
 
 .article__edit-toggle {
   position: absolute;
-  top: 0.65rem;
-  right: 0.65rem;
+  top: 1rem;
+  right: 1rem;
   height: 22px;
   width: 72px;
   display: inline-flex;
